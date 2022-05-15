@@ -111,14 +111,14 @@ void Section::removeProductFromShelf(const Product& removeElement, size_t shelfI
 		substractLength = shelf[shelfIndex][productId + 1].getLength() - shelf[shelfIndex][productId - 1].getLength();
 		//вземам точната дължина 
 	}
+
 	for (int i = productId + 1; i < productsOnShelf; i++)
 	{
-		shelf[shelfIndex][i] = shelf[shelfIndex][i - 1];
 		shelf[shelfIndex][i].setId(i - 1);
 		size_t newLength = shelf[shelfIndex][i].getLength() - substractLength;
 		shelf[shelfIndex][i].setLength(newLength);
 	}
-	shelf[shelfIndex].pop_back(removeElement);
+	shelf[shelfIndex].pop_back(shelf[shelfIndex][productsOnShelf-1]);
 	
 }
 

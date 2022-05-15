@@ -22,6 +22,7 @@ class Storage
 	void storeInfo(Product&);
 	void removeQuantity(const MyString&, size_t);
 	void removeFromTotalQuantity(const MyString&, size_t);
+
 public:
 	void insertProduct();
 	void cleanUp(const Date&);

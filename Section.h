@@ -13,6 +13,7 @@ class Section
 	
 	size_t findPosition(size_t&, size_t&, size_t&) const;
 public:
+	
 	const int& getNumberOfShelves() const;
 	const int& getNumberOfWidth() const;
 	const int& getNumberOfLength() const;

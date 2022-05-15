@@ -34,7 +34,7 @@ void Storage::storeInfo(Product& newProduct)
 		{
 			size_t newQuantity = quantityOfProduct[i].getSecond() + newProduct.getQuantityInstock();
 			quantityOfProduct[i].setSecond(newQuantity);
-			bool added = true;
+			added = true;
 		}		
 	}
 	
@@ -51,7 +51,6 @@ void Storage::insertProduct()
 	MyString command;
 	std::cout << ">";
 	std::cin >> command;
-	std::cout << std::endl;
 
 	Product newProduct;
 
@@ -71,23 +70,6 @@ void Storage::insertProduct()
 		}
 		std::cout << ">";
 		std::cin >> command;
-		std::cout << std::endl;
-	}
-}
-
-void Storage::cleanUp(const Date& validyDate)
-{
-	for (int i = 0; i < numberOfSections; i++)
-	{
-		sections[i].eraseProducts(validyDate);
-	}
-	size_t validProducts = listOfValidProducts.getSize();
-	for (int i = 0; i < validProducts; i++)
-	{
-		if (listOfValidProducts[i].getValidityDate() < validyDate)
-		{
-			listOfValidProducts.pop_back(listOfValidProducts[i]);
-		}
 	}
 }
 
@@ -139,6 +121,23 @@ void Storage::removeFromTotalQuantity(const MyString& productName, size_t quanti
 	}
 }
 
+void Storage::cleanUp(const Date& validyDate)
+{
+	for (int i = 0; i < numberOfSections; i++)
+	{
+		sections[i].eraseProducts(validyDate);
+	}
+	size_t validProducts = listOfValidProducts.getSize();
+	for (int i = 0; i < validProducts; i++)
+	{
+		if (listOfValidProducts[i].getValidityDate() < validyDate)
+		{
+			listOfValidProducts.pop_back(listOfValidProducts[i]);
+			removeFromTotalQuantity(listOfValidProducts[i].getName(), listOfValidProducts[i].getQuantityInstock());
+		}
+	}
+}
+
 void Storage::removeQuantity(const MyString& productName, size_t neededQuantity)
 {
 	size_t validProducts = listOfValidProducts.getSize();
@@ -161,9 +160,7 @@ void Storage::removeQuantity(const MyString& productName, size_t neededQuantity)
 					sections[productShelf].removeProductFromShelf(listOfValidProducts[i], productShelf);
 				}
 
-				Pair<Product, bool> temp;
-				temp.setFirst(listOfValidProducts[i]);
-				temp.setSecond(true);
+				Pair<Product, bool> temp(listOfValidProducts[i],true);
 				actionsMade.push_back(temp);
 				removeFromTotalQuantity(productName, neededQuantity);
 
@@ -176,7 +173,18 @@ void Storage::removeQuantity(const MyString& productName, size_t neededQuantity)
 				std::cout << "Do you want to get another stock" << std::endl;
 				std::cin >> answer;
 				if (answer == 0)
+				{
 					return;
+				}
+				else
+				{
+					listOfValidProducts.pop_back(listOfValidProducts[i]);
+
+					size_t productSection = listOfValidProducts[i].getSection();
+					size_t productShelf = listOfValidProducts[i].getShelf();
+					sections[productShelf].removeProductFromShelf(listOfValidProducts[i], productShelf);
+					removeFromTotalQuantity(productName, availableQ);
+				}
 			}
 		}
 	}
@@ -190,7 +198,6 @@ void Storage::getProduct()
 	MyString command;
 	std::cout << ">";
 	std::cin >> command; 
-	std::cout << std::endl;
 
 	MyString nameOfProduct;
 	size_t neededQuantity;
@@ -202,6 +209,5 @@ void Storage::getProduct()
 		removeQuantity(nameOfProduct, neededQuantity);
 		std::cout << ">";
 		std::cin >> command;
-		std::cout << std::endl;
 	}
 }

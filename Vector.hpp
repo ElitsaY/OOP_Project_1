@@ -57,11 +57,19 @@ void Vector<T>::push_back(const T& newElement)
 template<typename T>
 void Vector<T>::pop_back(const T& removeElement)
 {
+	/*int i = 0;
+	while (container[i] != removeElement && i < size) i++;//operator !=
+	if (i == size)
+		throw std::logic_error("the element does not exist");
+	container[i] = container[size - 1];*/
 	int i = 0;
 	while (container[i] != removeElement && i < size) i++;//operator !=
 	if (i == size)
 		throw std::logic_error("the element does not exist");
-	container[i] = container[size - 1];
+	for (int j = i; j < size - 1; j++)
+	{
+		container[j] = container[j + 1];
+	}
 	size--;
 }
 
